@@ -1,0 +1,195 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Profil utilisateur unifié (Passager et/ou Conducteur VTC)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 128 },
+        "fullName": { "type": "string", "maxLength": 100 },
+        "phoneNumber": { "type": "string", "maxLength": 30 },
+        "avatarUrl": { "type": "string", "maxLength": 500 },
+        "driverPhotoUrl": { "type": "string", "maxLength": 500 },
+        "cinNumber": { "type": "string", "maxLength": 30 },
+        "currentRole": { "type": "string", "enum": ["PASSENGER", "DRIVER"] },
+        "kycStatus": { "type": "string", "enum": ["NOT_SUBMITTED", "PENDING", "APPROVED", "REJECTED"] },
+        "rating": { "type": "number" },
+        "pointsBalance": { "type": "number" },
+        "totalRides": { "type": "number" },
+        "isOnline": { "type": "boolean" },
+        "bankRib": { "type": "string", "maxLength": 34 },
+        "bankName": { "type": "string", "maxLength": 60 },
+        "bankAccountHolder": { "type": "string", "maxLength": 100 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "fullName", "currentRole", "kycStatus", "pointsBalance"]
+    },
+    "Ride": {
+      "title": "Ride",
+      "description": "Demande de course et négociation de tarif",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "passengerId": { "type": "string", "maxLength": 128 },
+        "passengerName": { "type": "string", "maxLength": 100 },
+        "passengerRating": { "type": "number" },
+        "originName": { "type": "string", "maxLength": 150 },
+        "originAddress": { "type": "string", "maxLength": 250 },
+        "originLat": { "type": "number" },
+        "originLng": { "type": "number" },
+        "destinationName": { "type": "string", "maxLength": 150 },
+        "destinationAddress": { "type": "string", "maxLength": 250 },
+        "destinationLat": { "type": "number" },
+        "destinationLng": { "type": "number" },
+        "recommendedPrice": { "type": "number" },
+        "passengerPrice": { "type": "number" },
+        "finalPrice": { "type": "number" },
+        "status": {
+          "type": "string",
+          "enum": ["IDLE", "SEARCHING", "OFFERS_RECEIVED", "ACCEPTED", "ARRIVED", "IN_PROGRESS", "COMPLETED", "CANCELLED"]
+        },
+        "otpCode": { "type": "string", "maxLength": 10 },
+        "distanceKm": { "type": "number" },
+        "durationMinutes": { "type": "number" },
+        "paymentMethod": { "type": "string", "enum": ["POINTS", "CASH"] },
+        "selectedOfferId": { "type": "string", "maxLength": 128 },
+        "driverId": { "type": "string", "maxLength": 128 },
+        "driverName": { "type": "string", "maxLength": 100 },
+        "driverRating": { "type": "number" },
+        "driverPhone": { "type": "string", "maxLength": 30 },
+        "driverAvatar": { "type": "string", "maxLength": 500 },
+        "driverConfirmedCompletion": { "type": "boolean" },
+        "passengerConfirmedCompletion": { "type": "boolean" },
+        "passengerRatingGiven": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "passengerId", "passengerName", "status", "passengerPrice", "paymentMethod"]
+    },
+    "DriverOffer": {
+      "title": "DriverOffer",
+      "description": "Offre ou contre-proposition de prix formulée par un chauffeur",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "rideId": { "type": "string", "maxLength": 128 },
+        "driverId": { "type": "string", "maxLength": 128 },
+        "driverName": { "type": "string", "maxLength": 100 },
+        "driverAvatar": { "type": "string", "maxLength": 500 },
+        "driverRating": { "type": "number" },
+        "totalTrips": { "type": "number" },
+        "offeredPrice": { "type": "number" },
+        "originalPrice": { "type": "number" },
+        "etaMinutes": { "type": "number" },
+        "status": { "type": "string", "enum": ["PENDING", "ACCEPTED", "REJECTED", "EXPIRED", "COUNTERED"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "rideId", "driverId", "driverName", "offeredPrice", "status"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Message de communication sécurisé in-app entre passager et conducteur pour une course",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "rideId": { "type": "string", "maxLength": 128 },
+        "senderId": { "type": "string", "maxLength": 128 },
+        "senderRole": { "type": "string", "enum": ["PASSENGER", "DRIVER"] },
+        "senderName": { "type": "string", "maxLength": 100 },
+        "text": { "type": "string", "maxLength": 1000 },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "rideId", "senderRole", "senderName", "text"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Mouvement financier ou rechargement de points pour le portefeuille passager/chauffeur",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "rideId": { "type": "string", "maxLength": 128 },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["PLATFORM_FEE", "DRIVER_PAYOUT", "RIDE_EARNING", "TOPUP"] },
+        "description": { "type": "string", "maxLength": 250 },
+        "balanceAfter": { "type": "number" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "amount", "type", "balanceAfter"]
+    },
+    "KycApplication": {
+      "title": "KycApplication",
+      "description": "Dossier de conformité KYC chauffeur (CIN recto/verso, selfie vérifié et véhicule)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "fullName": { "type": "string", "maxLength": 100 },
+        "cinNumber": { "type": "string", "maxLength": 30 },
+        "cinRectoUrl": { "type": "string", "maxLength": 500 },
+        "cinVersoUrl": { "type": "string", "maxLength": 500 },
+        "driverPhotoUrl": { "type": "string", "maxLength": 500 },
+        "vehicleMake": { "type": "string", "maxLength": 50 },
+        "vehicleModel": { "type": "string", "maxLength": 50 },
+        "vehiclePlate": { "type": "string", "maxLength": 30 },
+        "status": { "type": "string", "enum": ["PENDING", "APPROVED", "REJECTED"] },
+        "submittedAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "fullName", "cinNumber", "status"]
+    },
+    "RentalBooking": {
+      "title": "RentalBooking",
+      "description": "Réservation de matériel touristique et nautique à Dakhla (GoPro, Kitesurf, Quads, Fatbike)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "userName": { "type": "string", "maxLength": 100 },
+        "gearId": { "type": "string", "maxLength": 128 },
+        "gearTitle": { "type": "string", "maxLength": 150 },
+        "durationUnit": { "type": "string", "enum": ["HOURLY", "DAILY"] },
+        "durationValue": { "type": "number" },
+        "totalPrice": { "type": "number" },
+        "pickupLocation": { "type": "string", "maxLength": 200 },
+        "paymentMethod": { "type": "string", "enum": ["POINTS", "CASH"] },
+        "status": { "type": "string", "enum": ["CONFIRMED", "ACTIVE", "RETURNED", "CANCELLED"] },
+        "startDate": { "type": "string" },
+        "endDate": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "gearId", "totalPrice", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Profils des utilisateurs (passagers et conducteurs)"
+    },
+    "/rides/{rideId}": {
+      "schema": "Ride",
+      "description": "Demandes de courses et états de négociation en temps réel"
+    },
+    "/rides/{rideId}/offers/{offerId}": {
+      "schema": "DriverOffer",
+      "description": "Offres de chauffeurs pour une course donnée"
+    },
+    "/rides/{rideId}/messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "Messagerie instantanée pour une course active"
+    },
+    "/users/{userId}/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Historique des transactions de portefeuille"
+    },
+    "/kyc_applications/{applicationId}": {
+      "schema": "KycApplication",
+      "description": "Dossiers KYC des chauffeurs pour validation administrative"
+    },
+    "/rentals/{rentalId}": {
+      "schema": "RentalBooking",
+      "description": "Réservations de matériel nautique et touristique"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Remix Dakhla Ride - Unified Mobility \u0026 Real-Time Bidding Platform",
+  "description": "Architecture logicielle complète et simulateur interactif temps réel pour application VTC avec négociation de prix (Mode Passager, Conducteur, KYC, Firebase Firestore, PostGIS \u0026 WebSockets).",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
